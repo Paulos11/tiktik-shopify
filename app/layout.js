@@ -6,6 +6,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/layout/CartDrawer";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
+import AuthProvider from "@/components/auth/AuthProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const workSans = Work_Sans({
   subsets: ["latin"],
@@ -33,11 +35,14 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={workSans.className}>
-        <AnnouncementBar />
-        <Header isScrolled={isScrolled} />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <CartDrawer />
+        <AuthProvider>
+          <AnnouncementBar />
+          <Header isScrolled={isScrolled} />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+          <CartDrawer />
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   );

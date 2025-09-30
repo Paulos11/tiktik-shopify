@@ -2,13 +2,20 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { User, Heart, ShoppingBag, Menu, X } from "lucide-react";
+import { User, Heart, ShoppingBag, Menu, X, LogIn, LogOut } from "lucide-react";
+import { useAuthStore } from "@/lib/store";
+import { useCartStore } from "@/lib/store";
+import ClientOnly from "@/components/common/ClientOnly";
 
 export default function Header({ isScrolled }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovering, setIsHovering] = useState(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const { getCartItemsCount, openCart } = useCartStore();
+  const cartCount = getCartItemsCount();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -86,24 +93,117 @@ export default function Header({ isScrolled }) {
               className="flex items-center space-x-2 sm:space-x-3 animate-slideDown"
               style={{ animationDelay: "600ms" }}
             >
-              <button
-                className={`hidden sm:flex p-2 rounded-full transition-all duration-300 transform hover:scale-110 hover:rotate-6 ${
-                  isScrolled
-                    ? "text-white hover:bg-white/20 hover:shadow-lg"
-                    : "text-black hover:bg-black/10 hover:shadow-md"
-                }`}
-                aria-label="Account"
-                onMouseEnter={() => setIsHovering("account")}
-                onMouseLeave={() => setIsHovering(null)}
-              >
-                <User
-                  size={18}
-                  strokeWidth={1.5}
-                  className={`transition-all duration-300 ${
-                    isHovering === "account" ? "stroke-2" : "stroke-1.5"
-                  }`}
-                />
-              </button>
+              {/* Account/Login Button */}
+              <ClientOnly fallback={
+                <div className="w-10 h-10 rounded-full animate-pulse bg-gray-200"></div>
+              }>
+                <div className="relative">
+                  {isAuthenticated ? (
+                  <button
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className={`hidden sm:flex p-2 rounded-full transition-all duration-300 transform hover:scale-110 hover:rotate-6 ${
+                      isScrolled
+                        ? "text-white hover:bg-white/20 hover:shadow-lg"
+                        : "text-black hover:bg-black/10 hover:shadow-md"
+                    }`}
+                    aria-label="Account"
+                    onMouseEnter={() => setIsHovering("account")}
+                    onMouseLeave={() => setIsHovering(null)}
+                  >
+                    <User
+                      size={18}
+                      strokeWidth={1.5}
+                      className={`transition-all duration-300 ${
+                        isHovering === "account" ? "stroke-2" : "stroke-1.5"
+                      }`}
+                    />
+                  </button>
+                ) : (
+                  <Link
+                    href="/login"
+                    className={`hidden sm:flex p-2 rounded-full transition-all duration-300 transform hover:scale-110 hover:rotate-6 ${
+                      isScrolled
+                        ? "text-white hover:bg-white/20 hover:shadow-lg"
+                        : "text-black hover:bg-black/10 hover:shadow-md"
+                    }`}
+                    aria-label="Login"
+                    onMouseEnter={() => setIsHovering("login")}
+                    onMouseLeave={() => setIsHovering(null)}
+                  >
+                    <LogIn
+                      size={18}
+                      strokeWidth={1.5}
+                      className={`transition-all duration-300 ${
+                        isHovering === "login" ? "stroke-2" : "stroke-1.5"
+                      }`}
+                    />
+                  </Link>
+                )}
+
+                {/* User Dropdown Menu */}
+                {isAuthenticated && showUserMenu && (
+                  <div className={`absolute right-0 top-full mt-2 w-48 rounded-md shadow-lg z-50 ${
+                    isScrolled ? "bg-zinc-800 border border-zinc-700" : "bg-white border border-gray-200"
+                  }`}>
+                    <div className="py-1">
+                      <div className={`px-4 py-2 text-xs font-medium ${
+                        isScrolled ? "text-gray-300" : "text-gray-500"
+                      }`}>
+                        Hello, {user?.firstName || 'User'}
+                      </div>
+                      <Link
+                        href="/account"
+                        className={`block px-4 py-2 text-sm transition-colors ${
+                          isScrolled
+                            ? "text-white hover:bg-zinc-700"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        My Account
+                      </Link>
+                      <Link
+                        href="/account/orders"
+                        className={`block px-4 py-2 text-sm transition-colors ${
+                          isScrolled
+                            ? "text-white hover:bg-zinc-700"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Order History
+                      </Link>
+                      <Link
+                        href="/account/profile"
+                        className={`block px-4 py-2 text-sm transition-colors ${
+                          isScrolled
+                            ? "text-white hover:bg-zinc-700"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Profile Settings
+                      </Link>
+                      <div className={`border-t ${isScrolled ? "border-zinc-700" : "border-gray-200"}`}>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setShowUserMenu(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                            isScrolled
+                              ? "text-red-400 hover:bg-zinc-700"
+                              : "text-red-600 hover:bg-gray-100"
+                          }`}
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                </div>
+              </ClientOnly>
 
               <button
                 className={`p-2 rounded-full transition-all duration-300 relative transform hover:scale-110 hover:-rotate-6 group ${
@@ -127,6 +227,7 @@ export default function Header({ isScrolled }) {
               </button>
 
               <button
+                onClick={openCart}
                 className={`p-2 rounded-full transition-all duration-300 relative transform hover:scale-110 hover:rotate-6 group ${
                   isScrolled
                     ? "text-white hover:bg-white/20 hover:shadow-lg"
@@ -143,11 +244,13 @@ export default function Header({ isScrolled }) {
                     isHovering === "cart" ? "stroke-2" : "stroke-1.5"
                   }`}
                 />
-                {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-medium animate-bounce">
-                    {cartCount}
-                  </span>
-                )}
+                <ClientOnly>
+                  {cartCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-medium animate-bounce">
+                      {cartCount}
+                    </span>
+                  )}
+                </ClientOnly>
               </button>
 
               <button
@@ -222,21 +325,102 @@ export default function Header({ isScrolled }) {
               }`}
               style={{ animationDelay: "400ms" }}
             >
-              <Link
-                href="/account"
-                className={`flex items-center space-x-3 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${
-                  isScrolled
-                    ? "text-white hover:text-gray-300"
-                    : "text-black hover:text-gray-600"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <User
-                  size={18}
-                  className="transition-transform duration-300 hover:rotate-12"
-                />
-                <span>Account</span>
-              </Link>
+              <ClientOnly fallback={
+                <div className="animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-8 bg-gray-200 rounded"></div>
+                </div>
+              }>
+                {isAuthenticated ? (
+                <>
+                  <div className={`px-2 py-1 text-xs font-medium ${
+                    isScrolled ? "text-gray-300" : "text-gray-500"
+                  }`}>
+                    Hello, {user?.firstName || 'User'}
+                  </div>
+                  <Link
+                    href="/account"
+                    className={`flex items-center space-x-3 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${
+                      isScrolled
+                        ? "text-white hover:text-gray-300"
+                        : "text-black hover:text-gray-600"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User
+                      size={18}
+                      className="transition-transform duration-300 hover:rotate-12"
+                    />
+                    <span>My Account</span>
+                  </Link>
+                  <Link
+                    href="/account/orders"
+                    className={`flex items-center space-x-3 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${
+                      isScrolled
+                        ? "text-white hover:text-gray-300"
+                        : "text-black hover:text-gray-600"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <ShoppingBag
+                      size={18}
+                      className="transition-transform duration-300 hover:rotate-12"
+                    />
+                    <span>Orders</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center space-x-3 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 transform hover:translate-x-2 hover:scale-105 w-full text-left ${
+                      isScrolled
+                        ? "text-red-400 hover:text-red-300"
+                        : "text-red-600 hover:text-red-500"
+                    }`}
+                  >
+                    <LogOut
+                      size={18}
+                      className="transition-transform duration-300 hover:rotate-12"
+                    />
+                    <span>Sign Out</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className={`flex items-center space-x-3 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${
+                      isScrolled
+                        ? "text-white hover:text-gray-300"
+                        : "text-black hover:text-gray-600"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <LogIn
+                      size={18}
+                      className="transition-transform duration-300 hover:rotate-12"
+                    />
+                    <span>Sign In</span>
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className={`flex items-center space-x-3 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${
+                      isScrolled
+                        ? "text-white hover:text-gray-300"
+                        : "text-black hover:text-gray-600"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User
+                      size={18}
+                      className="transition-transform duration-300 hover:rotate-12"
+                    />
+                    <span>Sign Up</span>
+                  </Link>
+                </>
+              )}
+              </ClientOnly>
             </div>
           </nav>
         </div>

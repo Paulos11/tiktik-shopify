@@ -33,7 +33,7 @@ export default function Footer() {
                 <Instagram size={18} />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/tiktikmalta"
                 className="w-10 h-10 border border-gray-700 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
                 aria-label="Facebook"
               >

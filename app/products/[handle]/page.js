@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useProductStore, useCartStore } from "@/lib/store";
-import { productAPI } from "@/lib/api";
 import ProductDetails from "@/components/product/ProductDetails";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductRecommendations from "@/components/product/ProductRecommendations";
@@ -14,16 +13,7 @@ export default function ProductPage() {
   const router = useRouter();
   const { handle } = params;
 
-  const {
-    products,
-    loading,
-    error,
-    selectedProduct,
-    setSelectedProduct,
-    fetchProducts,
-    fetchRelatedProducts,
-    clearError
-  } = useProductStore();
+  const { products, fetchProducts, fetchRelatedProducts } = useProductStore();
 
   const [productData, setProductData] = useState(null);
   const [loadingProduct, setLoadingProduct] = useState(true);
@@ -39,23 +29,28 @@ export default function ProductPage() {
       setProductError(null);
 
       try {
-        // First try to find in existing products
-        const existingProduct = products.find(p => p.handle === handle);
+        console.log("Looking for product with handle:", handle);
 
-        if (existingProduct) {
-          setProductData(existingProduct);
-          setSelectedProduct(existingProduct);
-          setLoadingProduct(false);
-          return;
+        // First, ensure we have products loaded
+        let allProducts = products;
+        if (allProducts.length === 0) {
+          console.log("No products in store, fetching all...");
+          allProducts = await fetchProducts(100);
         }
 
-        // If not found, fetch all products and find the one with matching handle
-        const allProducts = await productAPI.fetchAll(100);
-        const product = allProducts.find(p => p.handle === handle);
+        console.log("All products:", allProducts);
+        console.log("Products count:", allProducts.length);
+
+        // Find product by handle
+        const product = allProducts.find((p) => {
+          console.log("Checking product:", p.handle, "against", handle);
+          return p.handle === handle;
+        });
+
+        console.log("Found product:", product);
 
         if (product) {
           setProductData(product);
-          setSelectedProduct(product);
 
           // Fetch related products
           try {
@@ -63,13 +58,18 @@ export default function ProductPage() {
             setRecommendedProducts(related);
           } catch (error) {
             console.error("Failed to fetch related products:", error);
-            // Fall back to general products if related fetch fails
-            if (products.length > 0) {
-              const fallbackProducts = products.filter(p => p.id !== product.id).slice(0, 4);
-              setRecommendedProducts(fallbackProducts);
-            }
+            // Fallback to other products
+            const fallback = allProducts
+              .filter((p) => p.id !== product.id)
+              .slice(0, 4);
+            setRecommendedProducts(fallback);
           }
         } else {
+          console.error("Product not found with handle:", handle);
+          console.log(
+            "Available handles:",
+            allProducts.map((p) => p.handle)
+          );
           setProductError("Product not found");
         }
       } catch (err) {
@@ -81,14 +81,7 @@ export default function ProductPage() {
     };
 
     fetchProductByHandle();
-  }, [handle, products, setSelectedProduct, fetchRelatedProducts]);
-
-  // Fetch products for recommendations if not already loaded
-  useEffect(() => {
-    if (products.length === 0) {
-      fetchProducts(8);
-    }
-  }, [products.length, fetchProducts]);
+  }, [handle, fetchProducts, fetchRelatedProducts]);
 
   if (loadingProduct) {
     return (
@@ -107,8 +100,12 @@ export default function ProductPage() {
         <div className="text-center max-w-md mx-auto px-4">
           <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded mb-4">
             <h2 className="font-bold text-lg mb-2">Product Not Found</h2>
-            <p className="text-sm">
+            <p className="text-sm mb-2">
               {productError || "The product you're looking for doesn't exist."}
+            </p>
+            <p className="text-xs text-gray-600 mt-2">
+              Handle:{" "}
+              <code className="bg-red-200 px-1 py-0.5 rounded">{handle}</code>
             </p>
           </div>
           <div className="flex gap-3 justify-center">
@@ -152,18 +149,20 @@ export default function ProductPage() {
               Products
             </button>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-900 font-medium">{productData.title}</span>
+            <span className="text-gray-900 font-medium">
+              {productData.title}
+            </span>
           </nav>
         </div>
       </div>
 
       {/* Main Product Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Gallery */}
           <ProductGallery product={productData} />
 
-          {/* Product Details */}
+          {/* Product Details - Returns sidebar content AND full-width tabs */}
           <ProductDetails product={productData} />
         </div>
       </div>
