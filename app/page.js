@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import HeroSection from "@/components/layout/sections/HeroSection";
 import FeaturedProductsSection from "@/components/layout/sections/FeaturedProductsSection";
+import NewArrivalsSection from "@/components/layout/sections/NewArrivalsSection";
+import BrandsSlider from "@/components/layout/sections/BrandsSlider";
 import { useProductStore } from "@/lib/store";
 import BannerGridSection from "@/components/layout/sections/BannerGridSection";
 
@@ -52,6 +54,8 @@ export default function HomePage() {
     <>
       <HeroSection />
       <BannerGridSection />
+      <NewArrivalsSection />
+      <BrandsSlider />
       <FeaturedProductsSection products={products} />
     </>
   );

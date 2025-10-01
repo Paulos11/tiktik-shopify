@@ -138,8 +138,8 @@ export default function Footer() {
             </p>
             <div className="flex flex-wrap justify-center gap-5 sm:gap-6">
               {[
-                { name: "Privacy Policy", href: "/privacy" },
-                { name: "Terms of Service", href: "/terms" },
+                { name: "Privacy Policy", href: "/privacy-policy" },
+                { name: "Terms of Service", href: "/terms-conditions" },
                 { name: "Cookie Policy", href: "/cookies" },
               ].map((link) => (
                 <Link

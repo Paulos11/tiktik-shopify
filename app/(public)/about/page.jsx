@@ -1,3 +1,4 @@
+// app/AboutPage.jsx (or whatever your original file is named)
 "use client";
 import {
   MapPin,
@@ -9,29 +10,26 @@ import {
   Store,
 } from "lucide-react";
 
+// Import the new reusable component
+import HeroHeader from "@/components/layout/HeroHeader";
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <div className="bg-gray-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              About TikTik
-            </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
-              Swiss timepieces & Bearbrick art toys. Where precision meets
-              creativity.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* REPLACED THE ORIGINAL HEADER SECTION WITH THE REUSABLE COMPONENT
+        Passing title, subtitle, and image source as props
+      */}
+      <HeroHeader
+        title="About TikTik"
+        subtitle="Swiss timepieces & Bearbrick art toys. Where precision meets creativity."
+        bgImageSrc="/head-banner.jpg"
+      />
 
-      {/* Main Content */}
+      {/* Main Content (rest of the original component) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* About Text */}
           <div className="space-y-6">
+            {/* ... (rest of the content) ... */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Our Story
@@ -127,7 +125,7 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              {/* Email - Store */}
+              {/* Email */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail className="w-5 h-5 text-gray-700" />
@@ -170,7 +168,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Map Placeholder */}
+            {/* Map */}
             <div className="mt-8 w-full h-64 bg-gray-100 rounded-lg overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3230.8!2d14.4!3d35.88!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDUyJzQ4LjAiTiAxNMKwMjQnMDAuMCJF!5e0!3m2!1sen!2smt!4v1234567890"

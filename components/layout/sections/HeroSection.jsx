@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 
 const heroSlides = [
   {
@@ -13,6 +13,16 @@ const heroSlides = [
       "Discover the art of Swiss watchmaking with our exclusive collection of luxury timepieces.",
     image: "/hero/3.png",
     badge: "NEW RACING COLLECTION",
+    primaryButton: {
+      text: "EXPLORE COLLECTION",
+      link: "/collections/racing",
+    },
+    secondaryButton: {
+      text: "WATCH VIDEO",
+      link: "https://www.youtube.com/watch?v=fimifzBLqaU",
+      showIcon: true,
+      isVideo: true,
+    },
   },
   {
     id: 2,
@@ -20,8 +30,18 @@ const heroSlides = [
     subtitle: "ELEGANCE",
     description:
       "Where traditional craftsmanship meets contemporary design in perfect harmony.",
-    image: "/hero/1.png",
+    image: "/hero/2.png",
     badge: "SWISS MADE",
+    primaryButton: {
+      text: "SHOP NOW",
+      link: "/collections/classic",
+    },
+    secondaryButton: {
+      text: "LEARN MORE",
+      link: "/about",
+      showIcon: false,
+      isVideo: false,
+    },
   },
   {
     id: 3,
@@ -29,16 +49,34 @@ const heroSlides = [
     subtitle: "UNLEASHED",
     description:
       "Experience the pinnacle of horological excellence with our master craftsmen's finest creations.",
-    image: "/hero/2.png",
+    image: "/hero/3.jpeg",
     badge: "LIMITED EDITION",
+    primaryButton: {
+      text: "VIEW COLLECTION",
+      link: "/collections/limited",
+    },
+    secondaryButton: {
+      text: "DISCOVER STORY",
+      link: "https://www.youtube.com/watch?v=fimifzBLqaU",
+      showIcon: true,
+      isVideo: true,
+    },
   },
 ];
+
+// Function to extract YouTube video ID
+const getYouTubeId = (url) => {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+};
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [videoModal, setVideoModal] = useState({ isOpen: false, videoUrl: "" });
 
   useEffect(() => {
     setIsLoaded(true);
@@ -86,6 +124,20 @@ export default function HeroSection() {
       setIsTransitioning(false);
     }, 150);
     setIsAutoPlaying(false);
+  };
+
+  const openVideoModal = (url) => {
+    const videoId = getYouTubeId(url);
+    if (videoId) {
+      setVideoModal({
+        isOpen: true,
+        videoUrl: `https://www.youtube.com/embed/${videoId}?autoplay=1`,
+      });
+    }
+  };
+
+  const closeVideoModal = () => {
+    setVideoModal({ isOpen: false, videoUrl: "" });
   };
 
   const current = heroSlides[currentSlide];
@@ -172,22 +224,39 @@ export default function HeroSection() {
                 className="flex flex-col sm:flex-row gap-3.5 animate-slideInUp animation-delay-600"
                 key={`cta-${currentSlide}`}
               >
+                {/* Primary Button */}
                 <Link
-                  href="/collections"
+                  href={current.primaryButton.link}
                   className="group inline-flex items-center justify-center px-7 py-3 bg-white text-black text-xs font-semibold tracking-[0.15em] uppercase hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                 >
-                  EXPLORE COLLECTION
+                  {current.primaryButton.text}
                   <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300">
                     →
                   </span>
                 </Link>
-                <Link
-                  href="#video"
-                  className="group inline-flex items-center justify-center px-7 py-3 border border-white/35 text-white text-xs font-semibold tracking-[0.15em] uppercase hover:bg-white/20 transition-all duration-300 backdrop-blur-sm transform hover:scale-105 hover:shadow-lg"
-                >
-                  <Play className="w-3.5 h-3.5 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                  WATCH VIDEO
-                </Link>
+
+                {/* Secondary Button */}
+                {current.secondaryButton.isVideo ? (
+                  <button
+                    onClick={() => openVideoModal(current.secondaryButton.link)}
+                    className="group inline-flex items-center justify-center px-7 py-3 border border-white/35 text-white text-xs font-semibold tracking-[0.15em] uppercase hover:bg-white/20 transition-all duration-300 backdrop-blur-sm transform hover:scale-105 hover:shadow-lg"
+                  >
+                    {current.secondaryButton.showIcon && (
+                      <Play className="w-3.5 h-3.5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                    )}
+                    {current.secondaryButton.text}
+                  </button>
+                ) : (
+                  <Link
+                    href={current.secondaryButton.link}
+                    className="group inline-flex items-center justify-center px-7 py-3 border border-white/35 text-white text-xs font-semibold tracking-[0.15em] uppercase hover:bg-white/20 transition-all duration-300 backdrop-blur-sm transform hover:scale-105 hover:shadow-lg"
+                  >
+                    {current.secondaryButton.showIcon && (
+                      <Play className="w-3.5 h-3.5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                    )}
+                    {current.secondaryButton.text}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -256,6 +325,36 @@ export default function HeroSection() {
         )}
       </section>
 
+      {/* Video Modal */}
+      {videoModal.isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn"
+          onClick={closeVideoModal}
+        >
+          <div
+            className="relative w-full max-w-5xl mx-4 aspect-video animate-scaleIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={closeVideoModal}
+              className="absolute -top-12 right-0 w-10 h-10 flex items-center justify-center text-white hover:text-gray-300 transition-colors"
+              aria-label="Close video"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Video iframe */}
+            <iframe
+              src={videoModal.videoUrl}
+              className="w-full h-full rounded-lg"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
         @keyframes slideInUp {
           from {
@@ -290,6 +389,26 @@ export default function HeroSection() {
           }
         }
 
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
         @keyframes shimmer {
           0% {
             transform: translateX(-100%);
@@ -309,6 +428,14 @@ export default function HeroSection() {
 
         .animate-fadeInDown {
           animation: fadeInDown 0.6s ease-out both;
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out both;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.4s ease-out both;
         }
 
         .animate-shimmer {

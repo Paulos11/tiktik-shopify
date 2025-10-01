@@ -1,3 +1,4 @@
+//app/api/products/[handle]/variants/route.js
 import { NextResponse } from "next/server";
 import { productAPI, ShopifyAPIError } from "@/lib/api";
 

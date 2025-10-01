@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Script from "next/script";
 import "./globals.css";
 import { Work_Sans } from "next/font/google";
 import Header from "@/components/layout/Header";
@@ -7,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/layout/CartDrawer";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import AuthProvider from "@/components/auth/AuthProvider";
+import CookieConsent from "@/components/CookieConsent";
 import { Toaster } from "@/components/ui/toaster";
 
 const workSans = Work_Sans({
@@ -35,6 +37,24 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={workSans.className}>
+        {/* Google Analytics */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-N0QPTVD2PP"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-N0QPTVD2PP');
+            `,
+          }}
+        />
+
         <AuthProvider>
           <AnnouncementBar />
           <Header isScrolled={isScrolled} />
@@ -42,6 +62,7 @@ export default function RootLayout({ children }) {
           <Footer />
           <CartDrawer />
           <Toaster />
+          <CookieConsent />
         </AuthProvider>
       </body>
     </html>

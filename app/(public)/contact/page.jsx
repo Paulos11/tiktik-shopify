@@ -1,6 +1,10 @@
+// ContactPage.jsx
 "use client";
 import { useState } from "react";
 import { MapPin, Phone, Mail, Globe, Send } from "lucide-react";
+
+// Import the reusable HeroHeader component (assuming it's in a path like './components/HeroHeader')
+import HeroHeader from "@/components/layout/HeroHeader"; // Adjust the path as needed
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -48,19 +52,14 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <div className="bg-gray-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Contact Us
-            </h1>
-            <p className="text-xl text-gray-600">
-              Get in touch with our team. We're here to help.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* REPLACED THE ORIGINAL STATIC HERO SECTION with the reusable HeroHeader. 
+        Note: The HeroHeader component handles the `max-w` and text alignment internally.
+      */}
+      <HeroHeader
+        title="Contact Us"
+        subtitle="Get in touch with our team. We're here to help."
+        bgImageSrc="/head-banner.jpg" // Use your consistent banner image path
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">

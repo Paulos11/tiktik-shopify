@@ -1,14 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useProductStore } from "@/lib/store";
 import ProductCard from "@/components/product/ProductCard";
+import FilterSidebar from "@/components/product/FilterSidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
 export default function ProductsPage() {
   const {
-    products,
+    products: allProducts,
     loading,
     error,
     fetchProducts,
@@ -18,15 +19,162 @@ export default function ProductsPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState("featured");
+  const [activeFilters, setActiveFilters] = useState({
+    collections: [],
+    tags: [],
+    priceRange: null,
+    availability: null,
+  });
 
   useEffect(() => {
-    fetchProducts(20);
+    fetchProducts(100); // Fetch more products for filtering
   }, [fetchProducts]);
+
+  // Extract unique collections and tags from products
+  const { collections, tags, priceRange } = useMemo(() => {
+    const collectionsSet = new Set();
+    const tagsSet = new Set();
+    let minPrice = Infinity;
+    let maxPrice = 0;
+
+    console.log("Extracting filters from products:", allProducts.length);
+
+    allProducts.forEach((product) => {
+      console.log("Product:", product.title, {
+        productType: product.productType,
+        tags: product.tags,
+        price: product.variants?.[0]?.price,
+      });
+
+      // Extract collections (you may need to adjust based on your data structure)
+      if (product.productType) {
+        collectionsSet.add(product.productType);
+      }
+
+      // Extract tags
+      if (product.tags && Array.isArray(product.tags)) {
+        product.tags.forEach((tag) => {
+          if (tag && tag.trim()) tagsSet.add(tag);
+        });
+      }
+
+      // Calculate price range
+      const price = parseFloat(
+        product.variants?.[0]?.price || product.priceRange?.minVariantPrice || 0
+      );
+      if (price > 0) {
+        minPrice = Math.min(minPrice, price);
+        maxPrice = Math.max(maxPrice, price);
+      }
+    });
+
+    const extractedCollections = Array.from(collectionsSet).sort();
+    const extractedTags = Array.from(tagsSet).sort();
+
+    console.log("Extracted Collections:", extractedCollections);
+    console.log("Extracted Tags:", extractedTags);
+    console.log("Price Range:", { min: minPrice, max: maxPrice });
+
+    return {
+      collections: extractedCollections,
+      tags: extractedTags,
+      priceRange: {
+        min: minPrice === Infinity ? 0 : Math.floor(minPrice),
+        max: Math.ceil(maxPrice),
+      },
+    };
+  }, [allProducts]);
+
+  // Apply filters and sorting
+  const filteredProducts = useMemo(() => {
+    let filtered = [...allProducts];
+
+    // Apply collection filter
+    if (activeFilters.collections.length > 0) {
+      filtered = filtered.filter((product) =>
+        activeFilters.collections.includes(product.productType)
+      );
+    }
+
+    // Apply tags filter
+    if (activeFilters.tags.length > 0) {
+      filtered = filtered.filter((product) =>
+        product.tags?.some((tag) => activeFilters.tags.includes(tag))
+      );
+    }
+
+    // Apply price range filter
+    if (activeFilters.priceRange) {
+      const { min, max } = activeFilters.priceRange;
+      filtered = filtered.filter((product) => {
+        const price = parseFloat(
+          product.variants?.[0]?.price ||
+            product.priceRange?.minVariantPrice ||
+            0
+        );
+        return (!min || price >= min) && (!max || price <= max);
+      });
+    }
+
+    // Apply availability filter
+    if (activeFilters.availability === "in-stock") {
+      filtered = filtered.filter(
+        (product) => product.availableForSale !== false
+      );
+    } else if (activeFilters.availability === "out-of-stock") {
+      filtered = filtered.filter(
+        (product) => product.availableForSale === false
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case "price-low-high":
+        filtered.sort((a, b) => {
+          const priceA = parseFloat(
+            a.variants?.[0]?.price || a.priceRange?.minVariantPrice || 0
+          );
+          const priceB = parseFloat(
+            b.variants?.[0]?.price || b.priceRange?.minVariantPrice || 0
+          );
+          return priceA - priceB;
+        });
+        break;
+      case "price-high-low":
+        filtered.sort((a, b) => {
+          const priceA = parseFloat(
+            a.variants?.[0]?.price || a.priceRange?.minVariantPrice || 0
+          );
+          const priceB = parseFloat(
+            b.variants?.[0]?.price || b.priceRange?.minVariantPrice || 0
+          );
+          return priceB - priceA;
+        });
+        break;
+      case "name-a-z":
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "name-z-a":
+        filtered.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      case "newest":
+        filtered.sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+        break;
+      default: // featured
+        break;
+    }
+
+    return filtered;
+  }, [allProducts, activeFilters, sortBy]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
-      fetchProducts(20);
+      fetchProducts(100);
       return;
     }
 
@@ -40,10 +188,26 @@ export default function ProductsPage() {
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    fetchProducts(20);
+    fetchProducts(100);
   };
 
-  if (loading && !products.length) {
+  const handleFilterChange = (filterType, value) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [filterType]: value,
+    }));
+  };
+
+  const handleClearAllFilters = () => {
+    setActiveFilters({
+      collections: [],
+      tags: [],
+      priceRange: null,
+      availability: null,
+    });
+  };
+
+  if (loading && !allProducts.length) {
     return (
       <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -56,7 +220,7 @@ export default function ProductsPage() {
     );
   }
 
-  if (error && !products.length) {
+  if (error && !allProducts.length) {
     return (
       <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -69,7 +233,7 @@ export default function ProductsPage() {
               <Button
                 onClick={() => {
                   clearError();
-                  fetchProducts(20);
+                  fetchProducts(100);
                 }}
                 className="bg-black text-white hover:bg-gray-800"
               >
@@ -127,13 +291,25 @@ export default function ProductsPage() {
               </Button>
             </form>
 
-            {/* Filter button - placeholder for future functionality */}
+            {/* Filter toggle button */}
             <Button
               variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
               className="h-11 px-4 border-gray-300 hover:border-gray-400"
             >
               <SlidersHorizontal className="h-4 w-4 mr-2" />
               Filters
+              {(activeFilters.collections.length + activeFilters.tags.length >
+                0 ||
+                activeFilters.priceRange ||
+                activeFilters.availability) && (
+                <span className="ml-2 bg-black text-white text-xs px-2 py-0.5 rounded-full">
+                  {activeFilters.collections.length +
+                    activeFilters.tags.length +
+                    (activeFilters.priceRange ? 1 : 0) +
+                    (activeFilters.availability ? 1 : 0)}
+                </span>
+              )}
             </Button>
           </div>
 
@@ -156,61 +332,105 @@ export default function ProductsPage() {
           )}
         </div>
 
-        {/* Results Count & Sort */}
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-          <p className="text-sm text-gray-600">
-            <span className="font-semibold text-gray-900">
-              {products.length}
-            </span>{" "}
-            {products.length === 1 ? "product" : "products"}
-          </p>
-
-          {loading && products.length > 0 && (
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent"></div>
-              Loading...
-            </div>
+        {/* Main Content Grid */}
+        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+          {/* Filter Sidebar - Desktop */}
+          {showFilters && (
+            <aside className="hidden lg:block lg:col-span-1">
+              <div className="sticky top-24">
+                <FilterSidebar
+                  collections={collections}
+                  tags={tags}
+                  priceRange={priceRange}
+                  activeFilters={activeFilters}
+                  onFilterChange={handleFilterChange}
+                  onClearAll={handleClearAllFilters}
+                />
+              </div>
+            </aside>
           )}
+
+          {/* Main Content */}
+          <main className={showFilters ? "lg:col-span-3" : "lg:col-span-4"}>
+            {/* Results Count & Sort */}
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+              <p className="text-sm text-gray-600">
+                <span className="font-semibold text-gray-900">
+                  {filteredProducts.length}
+                </span>{" "}
+                {filteredProducts.length === 1 ? "product" : "products"}
+              </p>
+
+              {/* Sort Dropdown */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600 hidden sm:inline">
+                  Sort by:
+                </span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="text-sm border border-gray-300 rounded px-3 py-1.5 focus:ring-1 focus:ring-black focus:border-black"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="newest">Newest</option>
+                  <option value="price-low-high">Price: Low to High</option>
+                  <option value="price-high-low">Price: High to Low</option>
+                  <option value="name-a-z">Name: A to Z</option>
+                  <option value="name-z-a">Name: Z to A</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Filter Sidebar - Mobile */}
+            {showFilters && (
+              <div className="lg:hidden mb-6">
+                <FilterSidebar
+                  collections={collections}
+                  tags={tags}
+                  priceRange={priceRange}
+                  activeFilters={activeFilters}
+                  onFilterChange={handleFilterChange}
+                  onClearAll={handleClearAllFilters}
+                />
+              </div>
+            )}
+
+            {/* Products Grid */}
+            {filteredProducts.length === 0 ? (
+              <div className="py-20">
+                <div className="max-w-md mx-auto text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                    <Search className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    No products found
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Try adjusting your filters or search terms.
+                  </p>
+                  <Button
+                    onClick={handleClearAllFilters}
+                    variant="outline"
+                    className="border-gray-300 hover:border-gray-400"
+                  >
+                    Clear All Filters
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </main>
         </div>
 
-        {/* Products Grid */}
-        {products.length === 0 ? (
-          <div className="py-20">
-            <div className="max-w-md mx-auto text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                <Search className="h-8 w-8 text-gray-400" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {searchQuery ? "No products found" : "No products available"}
-              </h3>
-              <p className="text-gray-600 mb-6">
-                {searchQuery
-                  ? "Try adjusting your search terms or browse all products."
-                  : "Check back soon for new arrivals."}
-              </p>
-              {searchQuery && (
-                <Button
-                  onClick={handleClearSearch}
-                  variant="outline"
-                  className="border-gray-300 hover:border-gray-400"
-                >
-                  View All Products
-                </Button>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
-
         {/* Error Message */}
-        {error && products.length > 0 && (
+        {error && allProducts.length > 0 && (
           <div className="mt-8 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-            <p className="font-semibold text-sm">Search Error</p>
+            <p className="font-semibold text-sm">Error</p>
             <p className="text-sm">{error}</p>
           </div>
         )}

@@ -4,7 +4,6 @@ import {
   ShoppingBag,
   Heart,
   Share2,
-  Star,
   Truck,
   Shield,
   RotateCcw,
@@ -172,20 +171,6 @@ export default function ProductDetails({ product }) {
           {product.vendor && (
             <p className="text-sm text-gray-600 mb-2">{product.vendor}</p>
           )}
-
-          <div className="flex items-center gap-2 text-sm">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-4 h-4 ${
-                    i < 4 ? "fill-amber-400 text-amber-400" : "text-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="text-gray-600">(24 reviews)</span>
-          </div>
         </div>
 
         {/* Price */}
@@ -414,7 +399,7 @@ export default function ProductDetails({ product }) {
             )}
           </button>
           {expandedSections.details && (
-            <div className="pb-6 text-sm space-y-1">
+            <div className="pb-6 text-sm space-y-2">
               {selectedVariant?.sku && (
                 <p>
                   <span className="text-gray-600">SKU:</span>{" "}
@@ -431,6 +416,30 @@ export default function ProductDetails({ product }) {
                   <span className="text-gray-600">Type:</span>{" "}
                   {product.productType}
                 </p>
+              )}
+
+              {/* Display Metafields */}
+              {product.metafields && Object.keys(product.metafields).length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="font-semibold text-gray-900 mb-2">Specifications</p>
+                  <div className="space-y-1">
+                    {Object.entries(product.metafields).map(([key, field]) => {
+                      // Format the key to be readable
+                      const displayKey = key
+                        .split('.')
+                        .pop()
+                        .replace(/_/g, ' ')
+                        .replace(/\b\w/g, l => l.toUpperCase());
+
+                      return (
+                        <p key={key}>
+                          <span className="text-gray-600">{displayKey}:</span>{" "}
+                          {field.value}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
             </div>
           )}

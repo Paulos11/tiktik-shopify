@@ -1,30 +1,13 @@
-// app/api/products/[handle]/route.js
 import { NextResponse } from "next/server";
-import { getProduct } from "@/lib/shopify-storefront";
+import { getAllProducts } from "@/lib/shopify-storefront";
 
-export async function GET(request, { params }) {
+export async function GET() {
   try {
-    const { handle } = params;
+    // Fetch all products from Shopify using GraphQL
+    const productEdges = await getAllProducts();
 
-    if (!handle) {
-      return NextResponse.json(
-        { error: "Product handle is required" },
-        { status: 400 }
-      );
-    }
-
-    // Fetch product by handle using GraphQL
-    const product = await getProduct(handle);
-
-    if (!product || !product.id) {
-      return NextResponse.json(
-        { error: "Product not found" },
-        { status: 404 }
-      );
-    }
-
-    // Transform product data for client
-    const transformedProduct = {
+    // Transform the GraphQL data to a simpler format
+    const formattedProducts = productEdges.map(({ node: product }) => ({
       id: product.id,
       handle: product.handle,
       title: product.title,
@@ -39,10 +22,6 @@ export async function GET(request, { params }) {
         id: img.id,
         src: img.url,
         alt: img.altText || product.title,
-      })),
-      options: (product.options || []).map((option) => ({
-        name: option.name,
-        values: option.values,
       })),
       variants: product.variants.edges.map(({ node: variant }) => ({
         id: variant.id,
@@ -59,14 +38,25 @@ export async function GET(request, { params }) {
       },
       // Metafields will be added in a future update when we know the specific keys
       metafields: {},
-    };
+    }));
 
-    return NextResponse.json(transformedProduct);
+    // Log first product for debugging
+    if (formattedProducts.length > 0) {
+      console.log("Sample product:", {
+        title: formattedProducts[0].title,
+        tags: formattedProducts[0].tags,
+        productType: formattedProducts[0].productType,
+      });
+    }
+
+    return NextResponse.json({
+      products: formattedProducts,
+      count: formattedProducts.length,
+    });
   } catch (error) {
-    console.error("API Error - Product by handle:", error);
-
+    console.error("Error fetching products:", error);
     return NextResponse.json(
-      { error: "Failed to fetch product", details: error.message },
+      { error: "Failed to fetch products", details: error.message },
       { status: 500 }
     );
   }
