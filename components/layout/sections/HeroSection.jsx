@@ -30,7 +30,7 @@ const heroSlides = [
     subtitle: "ELEGANCE",
     description:
       "Where traditional craftsmanship meets contemporary design in perfect harmony.",
-    image: "/hero/2.png",
+    image: "/hero/3.png",
     badge: "SWISS MADE",
     primaryButton: {
       text: "SHOP NOW",
@@ -262,40 +262,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="absolute bottom-7 left-5 sm:left-6 lg:left-8 z-20 flex items-center space-x-5 animate-fadeInUp animation-delay-800">
-          {/* Indicators */}
-          <div className="flex space-x-2">
-            {heroSlides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`h-0.5 transition-all duration-500 transform hover:scale-y-150 relative overflow-hidden ${
-                  index === currentSlide
-                    ? "w-10 bg-white shadow-sm"
-                    : "w-6 bg-white/30 hover:bg-white/60"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              >
-                {index === currentSlide && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer"></div>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Counter */}
-          <div className="text-[10px] sm:text-xs font-medium tracking-wider">
-            <span className="text-white transition-all duration-300 hover:text-gray-200">
-              {String(currentSlide + 1).padStart(2, "0")}
-            </span>
-            <span className="text-white/40 mx-1">/</span>
-            <span className="text-white/40">
-              {String(heroSlides.length).padStart(2, "0")}
-            </span>
-          </div>
-        </div>
-
         {/* Navigation */}
         <div className="absolute bottom-7 right-5 sm:right-6 lg:right-8 z-20 flex space-x-2 animate-fadeInUp animation-delay-1000">
           <button
@@ -313,16 +279,6 @@ export default function HeroSection() {
             <ChevronRight className="w-4 h-4 group-hover:animate-pulse" />
           </button>
         </div>
-
-        {/* Auto-play indicator */}
-        {isAutoPlaying && (
-          <div className="absolute top-6 right-5 sm:right-6 lg:right-8 z-20 flex items-center space-x-1.5 animate-fadeInDown animation-delay-1200">
-            <div className="w-1 h-1 bg-white rounded-full animate-pulse"></div>
-            <span className="text-white/60 text-[9px] tracking-widest uppercase hover:text-white/80 transition-colors duration-300 cursor-default">
-              Auto
-            </span>
-          </div>
-        )}
       </section>
 
       {/* Video Modal */}

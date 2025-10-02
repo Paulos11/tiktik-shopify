@@ -57,7 +57,7 @@ export default function ContactPage() {
       */}
       <HeroHeader
         title="Contact Us"
-        subtitle="Get in touch with our team. We're here to help."
+        subtitle="Get in touch with our team. We&#39;re here to help."
         bgImageSrc="/head-banner.jpg" // Use your consistent banner image path
       />
 
@@ -193,7 +193,7 @@ export default function ContactPage() {
                   <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                     <p className="font-semibold">Message sent successfully!</p>
                     <p className="text-sm">
-                      We'll get back to you as soon as possible.
+                      We&#39;ll get back to you as soon as possible.
                     </p>
                   </div>
                 )}

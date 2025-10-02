@@ -7,6 +7,7 @@ import NewArrivalsSection from "@/components/layout/sections/NewArrivalsSection"
 import BrandsSlider from "@/components/layout/sections/BrandsSlider";
 import { useProductStore } from "@/lib/store";
 import BannerGridSection from "@/components/layout/sections/BannerGridSection";
+import GucciVideoSection from "@/components/layout/sections/GucciVideoSection";
 
 export default function HomePage() {
   const { products, loading, error, fetchProducts, clearError } =
@@ -52,11 +53,13 @@ export default function HomePage() {
 
   return (
     <>
+      {" "}
       <HeroSection />
       <BannerGridSection />
       <NewArrivalsSection />
-      <BrandsSlider />
+      <GucciVideoSection />
       <FeaturedProductsSection products={products} />
+      <BrandsSlider />
     </>
   );
 }

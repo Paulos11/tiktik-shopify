@@ -22,10 +22,10 @@ export default function PrivacyPolicyPage() {
               Introduction
             </h2>
             <p className="text-gray-700 mb-4">
-              TikTik ("we," "our," or "us") is committed to protecting your
-              privacy. This Privacy Policy explains how we collect, use,
-              disclose, and safeguard your information when you visit our
-              website tiktikwatch.com.
+              TikTik ({'"'}we,{'"'} {'"'}our,{'"'} or {'"'}us{'"'}) is committed
+              to protecting your privacy. This Privacy Policy explains how we
+              collect, use, disclose, and safeguard your information when you
+              visit our website tiktikwatch.com.
             </p>
           </section>
 

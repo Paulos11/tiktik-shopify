@@ -190,9 +190,10 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Visit Our Store
             </h2>
+            {/* FIX: Replaced the unescaped apostrophe (') with the HTML entity (&apos;) */}
             <p className="text-gray-600 mb-8">
-              Experience our collection in person. We're open and ready to help
-              you find the perfect timepiece or collectible.
+              Experience our collection in person. We&apos;re open and ready to
+              help you find the perfect timepiece or collectible.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a

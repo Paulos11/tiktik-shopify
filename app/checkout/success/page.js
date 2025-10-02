@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCartStore, useAuthStore } from "@/lib/store";
@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Package, ArrowRight, Home, User } from "lucide-react";
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
   const [orderDetails, setOrderDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,10 +33,10 @@ export default function CheckoutSuccessPage() {
       if (orderId) {
         setOrderDetails({
           id: orderId,
-          orderNumber: orderNumber || 'N/A',
-          total: orderTotal || '0.00',
-          currency: orderCurrency || 'USD',
-          status: 'confirmed'
+          orderNumber: orderNumber || "N/A",
+          total: orderTotal || "0.00",
+          currency: orderCurrency || "USD",
+          status: "confirmed",
         });
       }
       setIsLoading(false);
@@ -68,7 +68,8 @@ export default function CheckoutSuccessPage() {
             Payment Successful! 🎉
           </h1>
           <p className="text-lg text-gray-600">
-            Thank you for your order. Your payment has been processed successfully.
+            Thank you for your order. Your payment has been processed
+            successfully.
           </p>
         </div>
 
@@ -86,7 +87,9 @@ export default function CheckoutSuccessPage() {
                 <>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Order Number:</span>
-                    <span className="font-medium">#{orderDetails.orderNumber}</span>
+                    <span className="font-medium">
+                      #{orderDetails.orderNumber}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Order ID:</span>
@@ -116,7 +119,7 @@ export default function CheckoutSuccessPage() {
           {/* Next Steps */}
           <Card>
             <CardHeader>
-              <CardTitle>What's Next?</CardTitle>
+              <CardTitle>What&#39;s Next?</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
@@ -125,7 +128,7 @@ export default function CheckoutSuccessPage() {
                     <span className="text-xs font-medium text-blue-600">1</span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    You'll receive an order confirmation email shortly
+                    You&#39;ll receive an order confirmation email shortly
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -133,7 +136,8 @@ export default function CheckoutSuccessPage() {
                     <span className="text-xs font-medium text-blue-600">2</span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    We'll prepare and ship your order within 2-3 business days
+                    We&#39;ll prepare and ship your order within 2-3 business
+                    days
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -177,7 +181,8 @@ export default function CheckoutSuccessPage() {
                 Need Help?
               </h3>
               <p className="text-gray-600 mb-4">
-                If you have any questions about your order, our support team is here to help.
+                If you have any questions about your order, our support team is
+                here to help.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/contact">
@@ -192,5 +197,22 @@ export default function CheckoutSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <CheckoutSuccessContent />
+    </Suspense>
   );
 }

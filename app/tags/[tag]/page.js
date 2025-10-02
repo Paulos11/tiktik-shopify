@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ArrowLeft, Tag as TagIcon } from "lucide-react";
@@ -13,13 +13,7 @@ export default function TagPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (tag) {
-      fetchProductsByTag();
-    }
-  }, [tag]);
-
-  const fetchProductsByTag = async () => {
+  const fetchProductsByTag = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch("/api/products");
@@ -37,21 +31,26 @@ export default function TagPage() {
       console.log("Total products:", data.products?.length);
 
       // Filter products by tag (more flexible matching)
-      const taggedProducts = data.products?.filter((product) => {
-        console.log("Product:", product.title, "Tags:", product.tags);
-        return product.tags?.some((productTag) => {
-          const normalizedProductTag = productTag.toLowerCase().replace(/\s+/g, '-');
-          const normalizedSearchTag = decodedTag.toLowerCase().replace(/\s+/g, '-');
+      const taggedProducts =
+        data.products?.filter((product) => {
+          console.log("Product:", product.title, "Tags:", product.tags);
+          return product.tags?.some((productTag) => {
+            const normalizedProductTag = productTag
+              .toLowerCase()
+              .replace(/\s+/g, "-");
+            const normalizedSearchTag = decodedTag
+              .toLowerCase()
+              .replace(/\s+/g, "-");
 
-          // Match exact or partial
-          return (
-            normalizedProductTag === normalizedSearchTag ||
-            normalizedProductTag.includes(normalizedSearchTag) ||
-            normalizedSearchTag.includes(normalizedProductTag) ||
-            productTag.toLowerCase() === decodedTag.toLowerCase()
-          );
-        });
-      }) || [];
+            // Match exact or partial
+            return (
+              normalizedProductTag === normalizedSearchTag ||
+              normalizedProductTag.includes(normalizedSearchTag) ||
+              normalizedSearchTag.includes(normalizedProductTag) ||
+              productTag.toLowerCase() === decodedTag.toLowerCase()
+            );
+          });
+        }) || [];
 
       console.log("Filtered products:", taggedProducts.length);
 
@@ -62,7 +61,13 @@ export default function TagPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [tag]);
+
+  useEffect(() => {
+    if (tag) {
+      fetchProductsByTag();
+    }
+  }, [tag, fetchProductsByTag]);
 
   // Format tag name for display
   const formatTagName = (tagName) => {
@@ -117,7 +122,10 @@ export default function TagPage() {
           </div>
 
           <p className="text-gray-600 text-sm md:text-base">
-            {products.length} {products.length === 1 ? "product" : "products"} tagged with "{formatTagName(tag)}"
+            {products.length} {products.length === 1 ? "product" : "products"}{" "}
+            tagged with {'"'}
+            {formatTagName(tag)}
+            {'"'}
           </p>
         </div>
       </div>
@@ -128,7 +136,9 @@ export default function TagPage() {
           <div className="text-center py-12">
             <TagIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 mb-4">
-              No products found with tag "{formatTagName(tag)}"
+              No products found with tag {'"'}
+              {formatTagName(tag)}
+              {'"'}
             </p>
             <Link
               href="/products"
@@ -154,8 +164,8 @@ export default function TagPage() {
             <div className="flex flex-wrap gap-2">
               {Array.from(
                 new Set(
-                  products.flatMap((product) =>
-                    product.tags?.filter((t) => t) || []
+                  products.flatMap(
+                    (product) => product.tags?.filter((t) => t) || []
                   )
                 )
               ).map((productTag) => (

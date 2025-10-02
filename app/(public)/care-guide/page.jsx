@@ -92,7 +92,10 @@ export default function CareGuidePage() {
                   • Keep away from strong magnetic fields (speakers, phones,
                   magnetic clasps)
                 </li>
-                <li>• Don't operate crown or buttons while underwater</li>
+                <li>
+                  {/* FIXED: Replaced ' with &apos; */}• Don&apos;t operate
+                  crown or buttons while underwater
+                </li>
               </ul>
             </div>
           </div>
@@ -282,12 +285,14 @@ export default function CareGuidePage() {
 
             <div className="border-l-4 border-gray-300 pl-4">
               <h3 className="font-semibold text-gray-900 mb-1">
-                Crown Won't Screw Down
+                {/* FIXED: Replaced ' with &apos; */}
+                Crown Won&apos;t Screw Down
               </h3>
               <p className="text-sm text-gray-700 mb-2">
-                Don't force it. Check for dirt or debris around threads. Clean
-                gently and try again. If problem persists, seek professional
-                help.
+                {/* FIXED: Replaced ' with &apos; */}
+                Don&apos;t force it. Check for dirt or debris around threads.
+                Clean gently and try again. If problem persists, seek
+                professional help.
               </p>
             </div>
 

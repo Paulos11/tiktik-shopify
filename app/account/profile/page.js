@@ -6,7 +6,13 @@ import Link from "next/link";
 import { useAuthStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -18,7 +24,7 @@ import {
   Shield,
   Bell,
   Eye,
-  EyeOff
+  EyeOff,
 } from "lucide-react";
 
 export default function ProfilePage() {
@@ -28,17 +34,17 @@ export default function ProfilePage() {
     lastName: "",
     email: "",
     phone: "",
-    acceptsMarketing: false
+    acceptsMarketing: false,
   });
   const [passwords, setPasswords] = useState({
     current: "",
     new: "",
-    confirm: ""
+    confirm: "",
   });
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
-    confirm: false
+    confirm: false,
   });
   const [isSaving, setIsSaving] = useState(false);
   const [activeSection, setActiveSection] = useState("profile");
@@ -59,7 +65,7 @@ export default function ProfilePage() {
         lastName: user.lastName || "",
         email: user.email || "",
         phone: user.phone || "",
-        acceptsMarketing: user.acceptsMarketing || false
+        acceptsMarketing: user.acceptsMarketing || false,
       });
     }
   }, [user]);
@@ -73,7 +79,7 @@ export default function ProfilePage() {
       const profileData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        acceptsMarketing: formData.acceptsMarketing
+        acceptsMarketing: formData.acceptsMarketing,
       };
 
       // Only include phone if it's provided and seems valid
@@ -186,7 +192,9 @@ export default function ProfilePage() {
                 <User className="h-6 w-6 mr-2" />
                 Profile Settings
               </h1>
-              <p className="text-gray-600">Manage your account information and preferences</p>
+              <p className="text-gray-600">
+                Manage your account information and preferences
+              </p>
             </div>
           </div>
         </div>
@@ -252,25 +260,41 @@ export default function ProfilePage() {
                   <form onSubmit={handleProfileSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label htmlFor="firstName" className="text-sm font-medium">
+                        <label
+                          htmlFor="firstName"
+                          className="text-sm font-medium"
+                        >
                           First Name
                         </label>
                         <Input
                           id="firstName"
                           value={formData.firstName}
-                          onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              firstName: e.target.value,
+                            })
+                          }
                           placeholder="First name"
                           disabled={isSaving}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label htmlFor="lastName" className="text-sm font-medium">
+                        <label
+                          htmlFor="lastName"
+                          className="text-sm font-medium"
+                        >
                           Last Name
                         </label>
                         <Input
                           id="lastName"
                           value={formData.lastName}
-                          onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              lastName: e.target.value,
+                            })
+                          }
                           placeholder="Last name"
                           disabled={isSaving}
                         />
@@ -293,7 +317,8 @@ export default function ProfilePage() {
                         />
                       </div>
                       <p className="text-xs text-gray-500">
-                        Email address cannot be changed. Contact support if you need to change your email.
+                        Email address cannot be changed. Contact support if you
+                        need to change your email.
                       </p>
                     </div>
 
@@ -307,14 +332,17 @@ export default function ProfilePage() {
                           id="phone"
                           type="tel"
                           value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          onChange={(e) =>
+                            setFormData({ ...formData, phone: e.target.value })
+                          }
                           placeholder="Phone number (optional)"
                           className="pl-10"
                           disabled={isSaving}
                         />
                       </div>
                       <p className="text-xs text-gray-500">
-                        Enter your phone number with country code (e.g., +1 555-123-4567) or leave empty
+                        Enter your phone number with country code (e.g., +1
+                        555-123-4567) or leave empty
                       </p>
                     </div>
 
@@ -344,7 +372,10 @@ export default function ProfilePage() {
                   <form onSubmit={handlePasswordSubmit} className="space-y-6">
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <label htmlFor="currentPassword" className="text-sm font-medium">
+                        <label
+                          htmlFor="currentPassword"
+                          className="text-sm font-medium"
+                        >
                           Current Password
                         </label>
                         <div className="relative">
@@ -352,16 +383,23 @@ export default function ProfilePage() {
                             id="currentPassword"
                             type={showPasswords.current ? "text" : "password"}
                             value={passwords.current}
-                            onChange={(e) => setPasswords({...passwords, current: e.target.value})}
+                            onChange={(e) =>
+                              setPasswords({
+                                ...passwords,
+                                current: e.target.value,
+                              })
+                            }
                             placeholder="Enter current password"
                             className="pr-10"
                           />
                           <button
                             type="button"
-                            onClick={() => setShowPasswords({
-                              ...showPasswords,
-                              current: !showPasswords.current
-                            })}
+                            onClick={() =>
+                              setShowPasswords({
+                                ...showPasswords,
+                                current: !showPasswords.current,
+                              })
+                            }
                             className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                           >
                             {showPasswords.current ? (
@@ -374,7 +412,10 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="newPassword" className="text-sm font-medium">
+                        <label
+                          htmlFor="newPassword"
+                          className="text-sm font-medium"
+                        >
                           New Password
                         </label>
                         <div className="relative">
@@ -382,16 +423,23 @@ export default function ProfilePage() {
                             id="newPassword"
                             type={showPasswords.new ? "text" : "password"}
                             value={passwords.new}
-                            onChange={(e) => setPasswords({...passwords, new: e.target.value})}
+                            onChange={(e) =>
+                              setPasswords({
+                                ...passwords,
+                                new: e.target.value,
+                              })
+                            }
                             placeholder="Enter new password"
                             className="pr-10"
                           />
                           <button
                             type="button"
-                            onClick={() => setShowPasswords({
-                              ...showPasswords,
-                              new: !showPasswords.new
-                            })}
+                            onClick={() =>
+                              setShowPasswords({
+                                ...showPasswords,
+                                new: !showPasswords.new,
+                              })
+                            }
                             className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                           >
                             {showPasswords.new ? (
@@ -404,7 +452,10 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="confirmPassword" className="text-sm font-medium">
+                        <label
+                          htmlFor="confirmPassword"
+                          className="text-sm font-medium"
+                        >
                           Confirm New Password
                         </label>
                         <div className="relative">
@@ -412,16 +463,23 @@ export default function ProfilePage() {
                             id="confirmPassword"
                             type={showPasswords.confirm ? "text" : "password"}
                             value={passwords.confirm}
-                            onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
+                            onChange={(e) =>
+                              setPasswords({
+                                ...passwords,
+                                confirm: e.target.value,
+                              })
+                            }
                             placeholder="Confirm new password"
                             className="pr-10"
                           />
                           <button
                             type="button"
-                            onClick={() => setShowPasswords({
-                              ...showPasswords,
-                              confirm: !showPasswords.confirm
-                            })}
+                            onClick={() =>
+                              setShowPasswords({
+                                ...showPasswords,
+                                confirm: !showPasswords.confirm,
+                              })
+                            }
                             className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                           >
                             {showPasswords.confirm ? (
@@ -441,7 +499,9 @@ export default function ProfilePage() {
 
                     <div className="bg-amber-50 border border-amber-200 rounded-md p-4">
                       <p className="text-sm text-amber-800">
-                        <strong>Note:</strong> Password changes require additional setup with Shopify's Customer Account API. This feature will be available soon.
+                        <strong>Note:</strong> Password changes require
+                        additional setup with Shopify&#39;s Customer Account
+                        API. This feature will be available soon.
                       </p>
                     </div>
 
@@ -473,19 +533,25 @@ export default function ProfilePage() {
                           id="acceptsMarketing"
                           type="checkbox"
                           checked={formData.acceptsMarketing}
-                          onChange={(e) => setFormData({
-                            ...formData,
-                            acceptsMarketing: e.target.checked
-                          })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              acceptsMarketing: e.target.checked,
+                            })
+                          }
                           className="mt-1 h-4 w-4 rounded border-gray-300"
                           disabled={isSaving}
                         />
                         <div>
-                          <label htmlFor="acceptsMarketing" className="text-sm font-medium">
+                          <label
+                            htmlFor="acceptsMarketing"
+                            className="text-sm font-medium"
+                          >
                             Marketing Communications
                           </label>
                           <p className="text-sm text-gray-600">
-                            Receive emails about new products, sales, and exclusive offers.
+                            Receive emails about new products, sales, and
+                            exclusive offers.
                           </p>
                         </div>
                       </div>
@@ -499,21 +565,27 @@ export default function ProfilePage() {
                         <div>
                           <span className="text-gray-500">Member Since:</span>
                           <p className="font-medium">
-                            {new Date(user.createdAt).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            })}
+                            {new Date(user.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )}
                           </p>
                         </div>
                         <div>
                           <span className="text-gray-500">Last Updated:</span>
                           <p className="font-medium">
-                            {new Date(user.updatedAt).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            })}
+                            {new Date(user.updatedAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )}
                           </p>
                         </div>
                       </div>

@@ -28,18 +28,17 @@ export default function LimitedEditionPage() {
 
       // Filter products with "limited-edition" or similar tags
       // Handle various formats: "Limited Editions", "limited-edition", "limited edition", etc.
-      const limitedProducts = data.products?.filter((product) =>
-        product.tags?.some(
-          (tag) => {
-            const normalizedTag = tag.toLowerCase().replace(/\s+/g, '-');
+      const limitedProducts =
+        data.products?.filter((product) =>
+          product.tags?.some((tag) => {
+            const normalizedTag = tag.toLowerCase().replace(/\s+/g, "-");
             return (
-              normalizedTag.includes('limited-edition') ||
-              normalizedTag.includes('limited') ||
-              normalizedTag.includes('exclusive')
+              normalizedTag.includes("limited-edition") ||
+              normalizedTag.includes("limited") ||
+              normalizedTag.includes("exclusive")
             );
-          }
-        )
-      ) || [];
+          })
+        ) || [];
 
       setProducts(limitedProducts);
     } catch (err) {
@@ -107,10 +106,11 @@ export default function LimitedEditionPage() {
               <Award className="w-8 h-8 text-yellow-400" />
             </div>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Exclusive timepieces crafted in limited quantities. Own a piece of horological excellence.
+              Exclusive timepieces crafted in limited quantities. Own a piece of
+              horological excellence.
             </p>
             <p className="text-sm text-yellow-400 mt-4 font-medium">
-              Once they're gone, they're gone forever
+              Once they&#39;re gone, they&#39;re gone forever
             </p>
           </div>
         </div>
@@ -121,16 +121,20 @@ export default function LimitedEditionPage() {
         {products.length === 0 ? (
           <div className="text-center py-12">
             <Award className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">No limited edition pieces available right now.</p>
+            <p className="text-gray-600 mb-4">
+              No limited edition pieces available right now.
+            </p>
             <p className="text-sm text-gray-500">
-              Subscribe to our newsletter to be notified when new limited editions drop.
+              Subscribe to our newsletter to be notified when new limited
+              editions drop.
             </p>
           </div>
         ) : (
           <>
             <div className="mb-8 flex items-center justify-between">
               <p className="text-sm text-gray-600">
-                {products.length} exclusive {products.length === 1 ? "piece" : "pieces"}
+                {products.length} exclusive{" "}
+                {products.length === 1 ? "piece" : "pieces"}
               </p>
             </div>
 
@@ -177,7 +181,9 @@ export default function LimitedEditionPage() {
                       {/* Exclusive overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="absolute bottom-4 left-4 right-4">
-                          <p className="text-white text-xs font-medium">Exclusive Edition</p>
+                          <p className="text-white text-xs font-medium">
+                            Exclusive Edition
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -188,7 +194,9 @@ export default function LimitedEditionPage() {
                       </h3>
 
                       {product.vendor && (
-                        <p className="text-sm text-gray-500">{product.vendor}</p>
+                        <p className="text-sm text-gray-500">
+                          {product.vendor}
+                        </p>
                       )}
 
                       <div className="flex items-center gap-2">
@@ -205,7 +213,9 @@ export default function LimitedEditionPage() {
                       </div>
 
                       {!product.availableForSale && (
-                        <p className="text-sm text-red-600 font-medium">Sold Out</p>
+                        <p className="text-sm text-red-600 font-medium">
+                          Sold Out
+                        </p>
                       )}
                     </div>
                   </Link>

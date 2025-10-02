@@ -24,6 +24,10 @@ export default function ProductCard({ product }) {
   const price = product.variants[0]?.priceV2?.amount || "0.00";
   const isNew = product.tags?.includes("new") || false;
 
+  const hasSecondaryImage = secondaryImage !== primaryImage;
+  const wipeDuration = "duration-500";
+  const fadeDuration = "duration-300";
+
   return (
     <Link
       href={`/products/${product.handle}`}
@@ -41,12 +45,10 @@ export default function ProductCard({ product }) {
             </div>
           )}
 
-          {/* Primary Image */}
+          {/* Primary Image: Fades out */}
           <div
-            className={`absolute inset-0 transition-all duration-700 ease-in-out ${
-              isHovered && secondaryImage !== primaryImage
-                ? "opacity-0 scale-105"
-                : "opacity-100 scale-100"
+            className={`absolute inset-0 transition-opacity ${fadeDuration} ease-out ${
+              isHovered && hasSecondaryImage ? "opacity-0" : "opacity-100"
             }`}
           >
             <Image
@@ -57,11 +59,11 @@ export default function ProductCard({ product }) {
             />
           </div>
 
-          {/* Secondary Image */}
-          {secondaryImage !== primaryImage && (
+          {/* Secondary Image Container: Holds the image and the wipe effect */}
+          {hasSecondaryImage && (
             <div
-              className={`absolute inset-0 transition-all duration-700 ease-in-out ${
-                isHovered ? "opacity-100 scale-100" : "opacity-0 scale-95"
+              className={`absolute inset-0 transition-opacity ${fadeDuration} ease-out ${
+                isHovered ? "opacity-100" : "opacity-0"
               }`}
             >
               <Image
@@ -69,6 +71,13 @@ export default function ProductCard({ product }) {
                 alt={`${product.title} - alternate view`}
                 fill
                 className="object-cover"
+              />
+
+              {/* --- LINE WIPE OVERLAY (LEFT-TO-RIGHT) --- */}
+              <div
+                className={`absolute inset-0 bg-white origin-left transition-transform ${wipeDuration} ease-in-out ${
+                  isHovered ? "scale-x-0" : "scale-x-100"
+                }`}
               />
             </div>
           )}

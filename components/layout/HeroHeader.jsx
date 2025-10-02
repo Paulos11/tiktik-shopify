@@ -1,5 +1,6 @@
 // components/HeroHeader.jsx
 import React from "react";
+import Image from "next/image";
 
 /**
  * A reusable hero header component for a page.
@@ -14,12 +15,15 @@ import React from "react";
 export default function HeroHeader({ title, subtitle, bgImageSrc }) {
   return (
     <div className="relative border-b border-gray-200">
-      {/* Background Image - FULL RESOLUTION */}
+      {/* Background Image - FULL RESOLUTION with Next.js Image optimization */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src={bgImageSrc}
           alt={title}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
         />
       </div>
 

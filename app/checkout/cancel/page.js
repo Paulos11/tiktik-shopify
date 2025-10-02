@@ -38,17 +38,22 @@ export default function CheckoutCancelPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-gray-600">
-              Your checkout process was cancelled before payment could be completed. This could happen for several reasons:
+              Your checkout process was cancelled before payment could be
+              completed. This could happen for several reasons:
             </p>
             <ul className="list-disc list-inside text-gray-600 space-y-1">
-              <li>You clicked the "Cancel" or "Back" button during checkout</li>
+              <li>
+                You clicked the {'"'}Cancel{'"'} or {'"'}Back{'"'} button during
+                checkout
+              </li>
               <li>You closed the payment window</li>
               <li>The payment session expired</li>
               <li>There was a temporary payment processing issue</li>
             </ul>
             <div className="bg-blue-50 p-4 rounded-lg mt-4">
               <p className="text-blue-800 text-sm">
-                <strong>Good news:</strong> Your cart items are still saved and no payment was charged.
+                <strong>Good news:</strong> Your cart items are still saved and
+                no payment was charged.
               </p>
             </div>
           </CardContent>
@@ -90,7 +95,8 @@ export default function CheckoutCancelPage() {
                 Need Help Completing Your Order?
               </h3>
               <p className="text-gray-600 mb-4">
-                If you're having trouble with checkout or payment, our support team can assist you.
+                If you&#39;re having trouble with checkout or payment, our
+                support team can assist you.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/contact">

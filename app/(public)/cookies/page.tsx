@@ -1,6 +1,7 @@
 "use client";
 import { Cookie, Shield, Settings, BarChart3, Users, CheckCircle2 } from "lucide-react";
 
+
 export default function CookiesPage() {
   return (
     <div className="min-h-screen bg-white">
@@ -24,6 +25,7 @@ export default function CookiesPage() {
         </div>
       </section>
 
+
       {/* Main Content */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
         
@@ -37,6 +39,7 @@ export default function CookiesPage() {
             We use both session cookies (which expire when you close your browser) and persistent cookies (which remain on your device for a set period or until you delete them).
           </p>
         </div>
+
 
         {/* Types of Cookies */}
         <div className="mb-12 md:mb-16">
@@ -72,6 +75,7 @@ export default function CookiesPage() {
               </div>
             </div>
 
+
             {/* Preference Cookies */}
             <div className="bg-gray-50 p-6 md:p-8 rounded-lg">
               <div className="flex items-start gap-4 mb-4">
@@ -101,6 +105,7 @@ export default function CookiesPage() {
               </div>
             </div>
 
+
             {/* Analytics Cookies */}
             <div className="bg-gray-50 p-6 md:p-8 rounded-lg">
               <div className="flex items-start gap-4 mb-4">
@@ -129,6 +134,7 @@ export default function CookiesPage() {
                 </div>
               </div>
             </div>
+
 
             {/* Marketing Cookies */}
             <div className="bg-gray-50 p-6 md:p-8 rounded-lg">
@@ -161,6 +167,7 @@ export default function CookiesPage() {
           </div>
         </div>
 
+
         {/* Third-Party Cookies */}
         <div className="mb-12 md:mb-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Third-Party Cookies</h2>
@@ -171,6 +178,7 @@ export default function CookiesPage() {
             Common third-party services we use include Google Analytics for website analytics, social media platforms for sharing functionality, and advertising networks for targeted marketing campaigns.
           </p>
         </div>
+
 
         {/* Managing Cookies */}
         <div className="mb-12 md:mb-16">
@@ -201,16 +209,18 @@ export default function CookiesPage() {
           </div>
         </div>
 
+
         {/* Updates to Policy */}
         <div className="mb-12 md:mb-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Changes to This Policy</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            We may update our Cookie Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any material changes by posting the new Cookie Policy on this page with an updated "Last Updated" date.
+            We may update our Cookie Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any material changes by posting the new Cookie Policy on this page with an updated {'"'}Last Updated{'"'} date.
           </p>
           <p className="text-gray-700 leading-relaxed">
             We encourage you to review this Cookie Policy periodically to stay informed about how we use cookies and related technologies.
           </p>
         </div>
+
 
         {/* Contact Section */}
         <div className="bg-gradient-to-br from-gray-900 to-black text-white p-6 md:p-10 rounded-lg">
@@ -230,6 +240,7 @@ export default function CookiesPage() {
             </p>
           </div>
         </div>
+
 
       </section>
     </div>

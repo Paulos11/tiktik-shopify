@@ -119,7 +119,7 @@ export default function ShippingReturnsPage() {
                 30-Day Return Policy
               </h3>
               <p className="text-gray-700 mb-4">
-                We offer a 30-day return policy on all items. If you're not
+                We offer a 30-day return policy on all items. If you&#39;re not
                 completely satisfied with your purchase, you may return it
                 within 30 days of delivery for a full refund or exchange.
               </p>
@@ -150,8 +150,8 @@ export default function ShippingReturnsPage() {
                     2
                   </span>
                   <span>
-                    We'll provide you with a return authorization and shipping
-                    label
+                    We&#39;ll provide you with a return authorization and
+                    shipping label
                   </span>
                 </li>
                 <li className="flex gap-3">

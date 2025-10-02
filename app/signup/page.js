@@ -1,6 +1,5 @@
-// SignupPage.jsx
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/store";
@@ -10,7 +9,7 @@ import { toast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 
-export default function SignupPage() {
+function SignupContent() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -297,5 +296,19 @@ export default function SignupPage() {
         </p>
       </form>
     </AuthLayout>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div>Loading...</div>
+        </div>
+      }
+    >
+      <SignupContent />
+    </Suspense>
   );
 }

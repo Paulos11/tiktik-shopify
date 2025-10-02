@@ -5,7 +5,14 @@ import Link from "next/link";
 import { useAuthStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { Mail, ArrowLeft } from "lucide-react";
 
@@ -51,15 +58,17 @@ export default function ForgotPasswordPage() {
             <div className="mx-auto mb-4 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
               <Mail className="h-6 w-6 text-green-600" />
             </div>
-            <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              Check your email
+            </CardTitle>
             <CardDescription>
-              We've sent password reset instructions to {email}
+              We&#39;ve sent password reset instructions to {email}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="text-center">
             <p className="text-sm text-gray-600 mb-4">
-              Didn't receive the email? Check your spam folder or try again.
+              Didn&#39;t receive the email? Check your spam folder or try again.
             </p>
             <Button
               onClick={() => {
@@ -93,7 +102,8 @@ export default function ForgotPasswordPage() {
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
           <CardDescription>
-            Enter your email address and we'll send you a link to reset your password
+            Enter your email address and we&#39;ll send you a link to reset your
+            password
           </CardDescription>
         </CardHeader>
 
@@ -118,11 +128,7 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Sending..." : "Send Reset Link"}
             </Button>
           </form>

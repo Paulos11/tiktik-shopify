@@ -28,18 +28,17 @@ export default function NewArrivalsPage() {
 
       // Filter products with "new-arrivals" or "new arrivals" tag
       // Handle various formats: "new-arrivals", "new arrivals", "new", "new-arriavals" (typo)
-      const newProducts = data.products?.filter((product) =>
-        product.tags?.some(
-          (tag) => {
-            const normalizedTag = tag.toLowerCase().replace(/\s+/g, '-');
+      const newProducts =
+        data.products?.filter((product) =>
+          product.tags?.some((tag) => {
+            const normalizedTag = tag.toLowerCase().replace(/\s+/g, "-");
             return (
-              normalizedTag.includes('new-arrival') ||
-              normalizedTag.includes('new-arriaval') || // handle typo
+              normalizedTag.includes("new-arrival") ||
+              normalizedTag.includes("new-arriaval") || // handle typo
               tag.toLowerCase() === "new"
             );
-          }
-        )
-      ) || [];
+          })
+        ) || [];
 
       // Sort by newest first (if you have createdAt field)
       newProducts.sort((a, b) => {
@@ -77,7 +76,9 @@ export default function NewArrivalsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error loading new arrivals: {error}</p>
+          <p className="text-red-600 mb-4">
+            Error loading new arrivals: {error}
+          </p>
           <button
             onClick={fetchNewArrivals}
             className="px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors"
@@ -107,7 +108,8 @@ export default function NewArrivalsPage() {
               New Arrivals
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover our latest timepieces. Fresh designs and innovative craftsmanship.
+              Discover our latest timepieces. Fresh designs and innovative
+              craftsmanship.
             </p>
           </div>
         </div>
@@ -126,7 +128,8 @@ export default function NewArrivalsPage() {
           <>
             <div className="mb-8 flex items-center justify-between">
               <p className="text-sm text-gray-600">
-                {products.length} {products.length === 1 ? "product" : "products"}
+                {products.length}{" "}
+                {products.length === 1 ? "product" : "products"}
               </p>
             </div>
 
@@ -174,7 +177,9 @@ export default function NewArrivalsPage() {
                       </h3>
 
                       {product.vendor && (
-                        <p className="text-sm text-gray-500">{product.vendor}</p>
+                        <p className="text-sm text-gray-500">
+                          {product.vendor}
+                        </p>
                       )}
 
                       <div className="flex items-center gap-2">

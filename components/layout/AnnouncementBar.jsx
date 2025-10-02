@@ -1,4 +1,14 @@
+"use client";
+import { useState, useEffect } from "react";
+
 export default function AnnouncementBar() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Set isLoaded to true after the component mounts
+    setIsLoaded(true);
+  }, []);
+
   const announcements = [
     "FREE SHIPPING WORLDWIDE",
     "RACING COLLECTION BACK IN STOCK",
@@ -7,7 +17,11 @@ export default function AnnouncementBar() {
 
   return (
     <>
-      <div className="bg-black text-white h-9 flex items-center overflow-hidden">
+      <div
+        className={`bg-black text-white h-9 flex items-center overflow-hidden transition-all duration-500 ease-out transform ${
+          isLoaded ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+        }`}
+      >
         <div className="flex animate-scroll whitespace-nowrap">
           {[...announcements, ...announcements].map((announcement, index) => (
             <div key={index} className="flex items-center">

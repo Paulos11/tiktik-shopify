@@ -33,8 +33,9 @@ export default function Header({ isScrolled }) {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 animate-slideDown">
-            {/* Logo */}
+          {/* Removed animate-slideDown from the parent div */}
+          <div className="flex items-center justify-between h-16">
+            {/* Logo - Animation remains on the parent header/logo placement */}
             <Link
               href="/"
               className="flex-shrink-0 group transform transition-all duration-300 hover:scale-105"
@@ -88,18 +89,19 @@ export default function Header({ isScrolled }) {
               ))}
             </nav>
 
-            {/* Actions */}
-            <div
-              className="flex items-center space-x-2 sm:space-x-3 animate-slideDown"
-              style={{ animationDelay: "600ms" }}
-            >
+            {/* Actions: Staggered animation applied to individual elements */}
+            <div className="flex items-center space-x-2 sm:space-x-3">
               {/* Account/Login Button */}
               <ClientOnly
                 fallback={
                   <div className="w-10 h-10 rounded-full animate-pulse bg-gray-200"></div>
                 }
               >
-                <div className="relative">
+                {/* Animation applied here (600ms) */}
+                <div
+                  className="relative animate-slideDown"
+                  style={{ animationDelay: "600ms" }}
+                >
                   {isAuthenticated ? (
                     <button
                       onClick={() => setShowUserMenu(!showUserMenu)}
@@ -217,12 +219,15 @@ export default function Header({ isScrolled }) {
                 </div>
               </ClientOnly>
 
+              {/* Wishlist Button */}
+              {/* Animation applied here (800ms) */}
               <button
-                className={`p-2 rounded-full transition-all duration-300 relative transform hover:scale-110 hover:-rotate-6 group ${
+                className={`p-2 rounded-full transition-all duration-300 relative transform hover:scale-110 hover:-rotate-6 group animate-slideDown ${
                   isScrolled
                     ? "text-white hover:bg-white/20 hover:shadow-lg"
                     : "text-black hover:bg-black/10 hover:shadow-md"
                 }`}
+                style={{ animationDelay: "800ms" }}
                 aria-label="Wishlist"
                 onMouseEnter={() => setIsHovering("wishlist")}
                 onMouseLeave={() => setIsHovering(null)}
@@ -238,13 +243,16 @@ export default function Header({ isScrolled }) {
                 />
               </button>
 
+              {/* Cart Button */}
+              {/* Animation applied here (1000ms) */}
               <button
                 onClick={openCart}
-                className={`p-2 rounded-full transition-all duration-300 relative transform hover:scale-110 hover:rotate-6 group ${
+                className={`p-2 rounded-full transition-all duration-300 relative transform hover:scale-110 hover:rotate-6 group animate-slideDown ${
                   isScrolled
                     ? "text-white hover:bg-white/20 hover:shadow-lg"
                     : "text-black hover:bg-black/10 hover:shadow-md"
                 }`}
+                style={{ animationDelay: "1000ms" }}
                 aria-label="Cart"
                 onMouseEnter={() => setIsHovering("cart")}
                 onMouseLeave={() => setIsHovering(null)}
@@ -299,7 +307,7 @@ export default function Header({ isScrolled }) {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu (unchanged) */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-300 ease-out ${
             isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
@@ -466,7 +474,7 @@ export default function Header({ isScrolled }) {
         }
 
         .animate-slideDown {
-          animation: slideDown 0.6s ease-out;
+          animation: slideDown 0.6s ease-out both; /* Added 'both' to keep the end state */
         }
 
         .animate-slideInLeft {
